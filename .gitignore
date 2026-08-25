@@ -1,0 +1,13 @@
+# Downloaded pretrained GPT-2 checkpoint (re-downloadable via download_and_load_gpt2)
+gpt2/
+
+# Fine-tuned model weights (too large for GitHub; publish on Hugging Face Hub instead)
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+This project includes and adapts source code from:
+
+  LLMs-from-scratch
+  Copyright (c) 2023-2026 Sebastian Raschka
+  Licensed under the Apache License, Version 2.0
+  https://github.com/rasbt/LLMs-from-scratch
+
+Specifically, model_arch.py combines and adapts code originally distributed
+across the following files in that repository:
+
+  - ch05/01_main-chapter-code/previous_chapters.py
+  - ch05/01_main-chapter-code/gpt_download.py
+  - ch05/01_main-chapter-code/gpt_generate.py
+  - ch07/01_main-chapter-code/previous_chapters.py
+
+Modifications made to the original code include (non-exhaustive):
+  - Combining functions from the files above into a single module
+  - Adding a backup-URL fallback to the GPT-2 checkpoint download logic
+
+The pretrained GPT-2 weights loaded by this project (via download_and_load_gpt2)
+are distributed by OpenAI under a separate Modified MIT License and are not
+covered by the Apache License above. See:
+https://github.com/openai/gpt-2/blob/master/LICENSE
