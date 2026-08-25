@@ -11,3 +11,9 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+hf_model_card_finance.md
+hf_model_card_transport.md
+
+update_model_cards.py
+upload_to_hf.py
