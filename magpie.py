@@ -5,14 +5,13 @@ import random
 import json
 
 hf_logging.set_verbosity_error()
-MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
-# SYSTEM_PROMPT = "あなたは日本語で応答する運送会社のAIアシスタントです。{label}に関するユーザーからの日本語の質問に、正確かつ簡潔に答えてください。"
-SYSTEM_PROMPT = "あなたは日本語で応答する銀行のAIアシスタントです。{label}に関するユーザーからの日本語の質問に、正確かつ簡潔に答えてください。"
+MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+SYSTEM_PROMPT = "あなたは日本語で応答する運送会社のAIアシスタントです。{label}に関するユーザーからの日本語の質問に、正確かつ簡潔に答えてください。"
+# SYSTEM_PROMPT = "あなたは日本語で応答する銀行のAIアシスタントです。{label}に関するユーザーからの日本語の質問に、正確かつ簡潔に答えてください。"
 PROMPT = (
-    "<|begin_of_text|>"
-    "<|start_header_id|>system<|end_header_id|>\n\n"
-    f"{SYSTEM_PROMPT}<|eot_id|>"
-    "<|start_header_id|>user<|end_header_id|>\n\n"
+    "<|im_start|>system\n"
+    f"{SYSTEM_PROMPT}<|im_end|>\n"
+    "<|im_start|>user\n"
 )
 MAX_NEW_TOKENS = 150
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -53,13 +52,13 @@ def main() -> None:
     tokenizer, model = load_model()
     dataset_list = []
     for _ in range(1000):
-        # label = random.choice(["配達状況", "配送料金", "配送時間", "配達日時の指定・変更"])
-        label = random.choice(["口座開設の手続き", "口座情報の変更", "通帳・キャッシュカードの再発行", "NISA口座", "投資信託の購入・解約", "外貨預金の取引", "住宅ローンの申し込み", "カードローンの申し込み", "振込・送金の手続き", "ATMの利用方法"])
+        label = random.choice(["配達状況", "配送料金", "配送時間", "配達日時の指定・変更"])
+        # label = random.choice(["口座開設の手続き", "口座情報の変更", "通帳・キャッシュカードの再発行", "NISA口座", "投資信託の購入・解約", "外貨預金の取引", "住宅ローンの申し込み", "カードローンの申し込み", "振込・送金の手続き", "ATMの利用方法"])
         sys_usr, instruction = generate(tokenizer, model, PROMPT.format(label=label))
-        eot_str = "<|eot_id|>"
+        eot_str = "<|im_end|>"
         if not sys_usr.endswith(eot_str):
             sys_usr += eot_str
-        Response_gen_input = sys_usr + "<|start_header_id|>assistant<|end_header_id|>\n\n"
+        Response_gen_input = sys_usr + "\n<|im_start|>assistant\n"
         sys_usr_response, output = generate(tokenizer, model, Response_gen_input)
         dataset_list.append({
             "instruction": instruction.replace(eot_str, ""),
@@ -69,7 +68,7 @@ def main() -> None:
         if len(dataset_list) % 10 == 0:
             print(f"Generated {len(dataset_list)} samples")
 
-    json.dump(dataset_list, open("dataset_finance.json", "w", encoding="utf-8"), ensure_ascii=False, indent=4)
+    json.dump(dataset_list, open("dataset_trsprt.json", "w", encoding="utf-8"), ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
     main()
